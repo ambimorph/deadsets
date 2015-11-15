@@ -32,3 +32,28 @@ from sqlalchemy.orm import sessionmaker
 session = sessionmaker()
 session.configure(bind=engine)
 Base.metadata.create_all(engine)
+
+"""
+
+from app import *
+import datetime
+s = session()
+might = Song(title='Might As Well')
+s.add(might)
+oct = Show(textfile='10-10-76.txt', date=datetime.datetime(1976,10,10), city='Oakland')
+oct.songs.append(might)
+s.add(oct)
+s.commit()
+x = s.query(Song).filter(Song.title == 'Might As Well').all()
+[y.shows for y in x]
+[y.city for y in x.shows]
+[y.textfile for y in x.shows]
+sept = Show(textfile='9-24-76.txt', date=datetime.datetime(1976,9,26), city='Williamsburg')
+sept.songs.append(might)
+s.add(sept)
+s.commit()
+x = s.query(Song).filter(Song.title == 'Might As Well').one()
+[y.textfile for y in x.shows]
+[a.textfile for a in y]
+
+"""
