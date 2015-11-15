@@ -9,34 +9,40 @@ s = db.session()
 def remove_trailers(s):
     return s.strip().rstrip('->').strip().rstrip('*').strip()
 
+def process_file(filename):
+    city, songs = parse_show_file(filename)
+    date = parse(os.path.splitext(os.path.basename(filename))[0])
+    sh = Show(textfile=filename, date=date, city=city)
+    for title in songs:
+        so = Song(title=title)
+        s.add(so)
+        sh.songs.append(so)
+    s.add(sh)
+    s.commit()
+
+
 def parse_show_file(filename):
     f = open(filename, 'r')
     first_line = f.readline()
-    city = first_line.split(',')[1].strip()
+    try:
+        city = first_line.split(',')[1].strip()
+    except IndexError, e:
+        city = ''
     songs = []
     for line in f:
         if line.startswith('*'):
             break
-            if line != '\n':
-                title = remove_trailers(line)
-                if title.startswith('E:'):
-                    title = title[3:]
-                songs.append(title)
+        if line != '\n':
+            title = remove_trailers(line)
+            if title.startswith('E:'):
+                title = title[3:]
+            songs.append(title)
     return city, songs
 
 def load_files(dirname):
 
     for fname in os.listdir(dirname):
-        date = parse(os.path.splitext(fname)[0])
-        city, songs = parse_show_file(os.path.join(dirname,fname))
-        sh = Show(textfile=fname, date=date, city=city)
-        for title in songs:
-            so = Song(title=title)
-            s.add(so)
-            sh.songs.append(so)
-        s.add(sh)
-        s.commit()
-    #s.commit()  Should be here, but will commit at each step for testing
+        process_file(os.path.join(dirname, fname))
 
 if __name__ == '__main__':
     
