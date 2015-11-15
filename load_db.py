@@ -45,24 +45,32 @@ def load_files(dirname):
         process_file(os.path.join(dirname, fname))
 
 if __name__ == '__main__':
-    
+
     import sys
     directory = sys.argv[1]
     load_files(directory)
-            
+
 
 """
+
+One at a time:
 m = Song(title='Might As Well')
 s.add(m)
 s.commit()
 oct = Show(textfile='10-10-76.txt', date=datetime.datetime(1976,10,10), city='Oakland')
 oct.songs.append(m)
 s.add(oct)
-s.commit() 
-sept = Show(textfile='9-24-76.txt', date=datetime.datetime(1976,9,26), city='WilliamsIn [12]: 
+s.commit()
+sept = Show(textfile='9-24-76.txt', date=datetime.datetime(1976,9,26), city='WilliamsIn [12]:
 sept.songs.append(m)
 s.add(sept)
 s.commit()
 x = s.query(Song).filter(Song.title == 'Might As Well').one()
 [y.textfile for y in x.shows]
+
+
+After db is loaded:
+q = s.query(Song).filter(Song.title == 'Deal').all()
+[y[0].textfile for y in [x.shows for x in q]]
+
 """
