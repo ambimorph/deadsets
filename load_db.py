@@ -1,7 +1,7 @@
 from models import *
 import datetime
 import os
-from dateutils.parser import parse
+from dateutil.parser import parse
 
 db.create_all()
 s = db.session()
