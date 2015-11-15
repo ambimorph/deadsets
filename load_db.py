@@ -73,4 +73,15 @@ After db is loaded:
 q = s.query(Song).filter(Song.title == 'Deal').all()
 [y[0].textfile for y in [x.shows for x in q]]
 
+q = s.query(Show).filter(Show.date.between(datetime.datetime(1975,12,31), datetime.datetime(1977,1,1))).all()
+[x.textfile for x in q]
+q = s.query(Show).filter(Show.songs.any(title='Deal')).all()
+[x.textfile for x in q]
+
+q = s.query(Show).filter(Show.songs.any(title="Don't Ease Me In")).filter(Show.songs.any(title='Saint of Circumstance')).all()
+[x.textfile for x in q]
+
+q = s.query(Show).filter(Show.songs.any(title="Don't Ease Me In")).filter(Show.songs.any(title='Saint of Circumstance')).filter(Show.date<datetime.datetime(1981,1,1)).all()
+[x.textfile for x in q]
+
 """
